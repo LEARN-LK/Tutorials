@@ -69,10 +69,12 @@ SUBJECT="[$NOTIFICATIONTYPE] Host $HOSTDISPLAYNAME is $HOSTSTATE!"
 
 ## Build the notification message
 NOTIFICATION_MESSAGE=`cat << EOF
-$SUBJECT
-***** Icinga 2 Host Monitoring on $HOSTNAME *****
+*$SUBJECT*
 
-==> $HOSTDISPLAYNAME ($HOSTALIAS) is $HOSTSTATE! <==
+Icinga 2 Host Monitoring on $HOSTNAME
+------------------------------------------
+
+*==> $HOSTDISPLAYNAME ($HOSTALIAS) is $HOSTSTATE! <==*
 
 Info:    $HOSTOUTPUT
 
@@ -92,6 +94,7 @@ fi
 if [ -n "$NOTIFICATIONCOMMENT" ] ; then
   NOTIFICATION_MESSAGE="$NOTIFICATION_MESSAGE
 
+=============================================
 Comment by $NOTIFICATIONAUTHORNAME:
   $NOTIFICATIONCOMMENT"
 fi
@@ -100,6 +103,7 @@ fi
 if [ -n "$ICINGAWEB2URL" ] ; then
   NOTIFICATION_MESSAGE="$NOTIFICATION_MESSAGE
 
+=================
 Get live status:
   $ICINGAWEB2URL/monitoring/host/show?host=$HOSTALIAS"
 fi
@@ -111,6 +115,6 @@ fi
 
 
 APIURL="https://api.telegram.org/bot""$TOKENCODE""/sendMessage"
-APIOPTION="chat_id=""$CHATID""&text=$NOTIFICATION_MESSAGE"
+APIOPTION="chat_id=""$CHATID""&parse_mode=Markdown&text=$NOTIFICATION_MESSAGE"
 
 /usr/bin/curl -X POST "$APIURL" -d "$APIOPTION"
