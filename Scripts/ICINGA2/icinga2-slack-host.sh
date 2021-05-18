@@ -97,7 +97,7 @@ fi
 
 ## Are we verbose? Then put a message to syslog.
 if [ "$VERBOSE" == "true" ] ; then
-  logger "$PROG sends $SUBJECT => Telegram"
+  logger "$PROG sends $SUBJECT => Slack"
 fi
 
 
