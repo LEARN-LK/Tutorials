@@ -33,7 +33,7 @@ EOF
 exit 1;
 }
 
-while getopts 4:6::b:c:d:f:hi:l:n:o:s:t:v: opt
+while getopts 4:6::b:c:d:f:hi:l:n:o:s:t:v:x:y: opt
 do
   case "$opt" in
     4) HOSTADDRESS=$OPTARG ;;
@@ -69,23 +69,23 @@ SUBJECT="[$NOTIFICATIONTYPE] Host $HOSTDISPLAYNAME is $HOSTSTATE!"
 
 ## Build the notification message
 NOTIFICATION_MESSAGE=`cat << EOF
-<b>Subject:</b> **$SUBJECT**
+$SUBJECT
 ***** Icinga 2 Host Monitoring on $HOSTNAME *****
 
 ==> $HOSTDISPLAYNAME ($HOSTALIAS) is $HOSTSTATE! <==
 
-Info?    $HOSTOUTPUT
+Info:    $HOSTOUTPUT
 
-When?    $LONGDATETIME
-Host?    $HOSTALIAS (aka "$HOSTDISPLAYNAME)
-IPv4?	 $HOSTADDRESS
+When:    $LONGDATETIME
+Host:    $HOSTALIAS (aka "$HOSTDISPLAYNAME)
+IPv4: 	 $HOSTADDRESS
 EOF
 `
 
 ## Is this host IPv6 capable? Put its address into the message.
 if [ -n "$HOSTADDRESS6" ] ; then
   NOTIFICATION_MESSAGE="$NOTIFICATION_MESSAGE
-IPv6?	 $HOSTADDRESS6"
+IPv6: 	 $HOSTADDRESS6"
 fi
 
 ## Are there any comments? Put them into the message.
