@@ -1,4 +1,3 @@
-root@icinga2:/home/thilina# cat /etc/icinga2/scripts/telegram-notification.sh
 #!/usr/bin/env bash
 ## Created 20210515
 ## Thilina Pathirana
@@ -19,6 +18,8 @@ The following are mandatory:
   -o HOSTOUTPUT (\$host.output$)
   -s HOSTSTATE (\$host.state$)
   -t NOTIFICATIONTYPE (\$notification.type$)
+  -x Telegram TOKENCODE
+  -y Telegram CHAT ID
 
 And these are optional:
   -b NOTIFICATIONAUTHORNAME (\$notification.author$)
@@ -49,6 +50,8 @@ do
     s) HOSTSTATE=$OPTARG ;;
     t) NOTIFICATIONTYPE=$OPTARG ;;
     v) VERBOSE=$OPTARG ;;
+    x) TOKENCODE=$OPTARG ;;
+    y) CHATID=$OPTARG ;;
    \?) echo "ERROR: Invalid option -$OPTARG" >&2
        Usage ;;
     :) echo "Missing option argument for -$OPTARG" >&2
@@ -107,9 +110,7 @@ if [ "$VERBOSE" == "true" ] ; then
 fi
 
 
+APIURL="https://api.telegram.org/bot""$TOKENCODE""/sendMessage"
+APIOPTION="chat_id=""$CHATID""&text=$NOTIFICATION_MESSAGE"
 
-/usr/bin/curl -X POST "https://api.telegram.org/bot1689521:AAHmG3PSRZgQYNtH8yFafnWfc/sendMessage" -d "chat_id=-100134705&text=$NOTIFICATION_MESSAGE"
-
-## Slack
-
-/usr/bin/curl -X POST -H 'Content-type: application/json' --data "{'text':'$NOTIFICATION_MESSAGE'}" https://hooks.slam/services/T020MHSQM26/B020ER7AKP0/j6zZ
+/usr/bin/curl -X POST "$APIURL" -d "$APIOPTION"
