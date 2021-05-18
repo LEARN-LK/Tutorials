@@ -1,6 +1,10 @@
 #!/usr/bin/env bash
-## Created 20210515
-## Thilina Pathirana
+## Code below will send Alerts to Emails based on Service Notifications on Icinga2 using sendmail.
+## Originally made by Marianne M. Spiller <github@spiller.me>
+## updated and customized by Thilina Pathirana <me@thilinapathirana.xyz>
+## download this in to /etc/icinga2/scripts of your icinga installation.
+## You need to set up telegram bot for this to work.
+## 20210518
 
 PROG="`basename $0`"
 HOSTNAME="`hostname`"
