@@ -32,7 +32,7 @@ printf "\ny\n$mysql_root_pass\n$mysql_root_pass\ny\ny\ny\ny\n" | mysql_secure_in
 apt-get -y install icinga2-ido-mysql
 mysql_icinga_ido_pass=$(date +%s |  base64 | head -c 32)
 echo "Mysql password for icinga user is $mysql_icinga_ido_pass \n" >> /home/passwords.txt
-mysql -u root -p$mysql_root_pass -e "CREATE DATABASE icinga;CREATE USER 'icinga'@'localhost' IDENTIFIED BY '$mysql_icinga_ido_pass'; GRANT SELECT, INSERT, UPDATE, DELETE, DROP, CREATE VIEW, INDEX, EXECUTE ON icinga.* TO 'icinga'@'localhost';quit;"
+mysql -u root -p$mysql_root_pass -e "CREATE DATABASE icinga;CREATE USER 'icinga'@'localhost' IDENTIFIED BY '$mysql_icinga_ido_pass'; GRANT SELECT, INSERT, UPDATE, DELETE, DROP, CREATE VIEW, INDEX, EXECUTE ON icinga.* TO 'icinga'@'localhost';Flush privileges;quit;"
 
 
 mysql -u root -p$mysql_root_pass icinga < /usr/share/icinga2-ido-mysql/schema/mysql.sql
@@ -46,13 +46,13 @@ icingacli setup token create
 ##mysql icingaweb database
 mysql_icingaweb_pass=$(date +%s |  base64 | head -c 32)
 echo "Mysql Icingaweb password is $mysql_icingaweb_pass \n" >> /home/passwords.txt
-mysql -u root -p$mysql_root_pass -e "CREATE DATABASE icingaweb2;CREATE USER icingaweb2@localhost IDENTIFIED BY '$mysql_icingaweb_pass';GRANT ALL ON icingaweb2.* TO icingaweb2@localhost;Flush privileges;quit"
+mysql -u root -p$mysql_root_pass -e "CREATE DATABASE icingaweb2;CREATE USER icingaweb2@localhost IDENTIFIED BY '$mysql_icingaweb_pass';GRANT ALL ON icingaweb2.* TO icingaweb2@localhost;Flush privileges;quit;"
 
 
 ##mysql director database
 mysql_director_pass=$(date +%s |  base64 | head -c 32)
 echo "Mysql director password is $mysql_director_pass \n" >> /home/passwords.txt
-mysql -u root -p$mysql_root_pass -e "CREATE DATABASE director CHARACTER SET 'utf8';CREATE USER director@localhost IDENTIFIED BY '$mysql_director_pass';GRANT ALL ON director.* TO director@localhost;"
+mysql -u root -p$mysql_root_pass -e "CREATE DATABASE director CHARACTER SET 'utf8';CREATE USER director@localhost IDENTIFIED BY '$mysql_director_pass';GRANT ALL ON director.* TO director@localhost;Flush privileges;quit;"
 
 ICINGAWEB_MODULEPATH="/usr/share/icingaweb2/modules"
 REPO_URL="https://github.com/icinga/icingaweb2-module-director"
