@@ -32,9 +32,9 @@ printf "\ny\n$mysql_root_pass\n$mysql_root_pass\ny\ny\ny\ny\n" | mysql_secure_in
 apt-get -y install icinga2-ido-mysql
 mysql_icinga_ido_pass=$(date +%s |  base64 | head -c 32)
 echo "Mysql password for icinga user is $mysql_icinga_ido_pass \n" >> /home/passwords.txt
-mysql -u root -p@mysql_root_pass -e "CREATE DATABASE icinga;CREATE USER 'icinga'@'localhost' IDENTIFIED BY '@mysql_icinga_ido_pass' ;GRANT SELECT, INSERT, UPDATE, DELETE, DROP, CREATE VIEW, INDEX, EXECUTE ON icinga.* TO 'icinga'@'localhost';quit;"
+mysql -u root -p$mysql_root_pass -e "CREATE DATABASE icinga;CREATE USER 'icinga'@'localhost' IDENTIFIED BY '$mysql_icinga_ido_pass'; GRANT SELECT, INSERT, UPDATE, DELETE, DROP, CREATE VIEW, INDEX, EXECUTE ON icinga.* TO 'icinga'@'localhost';quit;"
 
 
-mysql -u root -p@mysql_root_pass icinga < /usr/share/icinga2-ido-mysql/schema/mysql.sql
+mysql -u root -p$mysql_root_pass icinga < /usr/share/icinga2-ido-mysql/schema/mysql.sql
 icinga2 feature enable ido-mysql
 systemctl restart icinga2
