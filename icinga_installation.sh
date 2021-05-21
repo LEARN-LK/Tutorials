@@ -25,13 +25,13 @@ apt -y install mariadb-server
 ##database configuration
 ##add here the prompting answers
 mysql_root_pass=$(date +%s |  base64 | head -c 32)
-echo "Mysql root password is $mysql_root_pass \n" > ./home/passwords.txt
+echo "Mysql root password is $mysql_root_pass \n" > /home/passwords.txt
 printf "\ny\n$mysql_root_pass\n$mysql_root_pass\ny\ny\ny\ny\n" | mysql_secure_installation
 
 
 apt-get -y install icinga2-ido-mysql
 mysql_icinga_ido_pass=$(date +%s |  base64 | head -c 32)
-echo "Mysql password for icinga user is $mysql_icinga_ido_pass \n" >> ./home/passwords.txt
+echo "Mysql password for icinga user is $mysql_icinga_ido_pass \n" >> /home/passwords.txt
 mysql -u root -p@mysql_root_pass -e "CREATE DATABASE icinga;CREATE USER 'icinga'@'localhost' IDENTIFIED BY '@mysql_icinga_ido_pass' ;GRANT SELECT, INSERT, UPDATE, DELETE, DROP, CREATE VIEW, INDEX, EXECUTE ON icinga.* TO 'icinga'@'localhost';quit;"
 
 
