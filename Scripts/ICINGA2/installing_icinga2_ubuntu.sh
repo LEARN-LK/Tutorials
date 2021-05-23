@@ -101,6 +101,9 @@ chown -R www-data:icingaweb2 /etc/icingaweb2/
 ##running api setup
 sudo icinga2 api setup
 
+##adding an api user for icingaweb
+printf "object ApiUser \"icingaweb2\" {\n  password = \"Wijsn8Z9eRs5E25d\"\n  permissions = [ \"status/query\", \"actions/*\", \"objects/modify/*\", \"objects/query/*\" ]\n}\n" >> /etc/icinga2/conf.d/api-users.conf
+
 ##adding an api user for director instead of using root
 director_api_user_password=$(date +%s |  base64 | head -c 32)
 echo "object ApiUser \"director\" {\n  password = \"$director_api_user_password\"\n  permissions = [ \"*\" ]\n}\n" >> /etc/icinga2/conf.d/api-users.conf
