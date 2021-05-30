@@ -36,7 +36,7 @@ EOF
 exit 1;
 }
 
-while getopts 4:6:b:c:d:e:f:hi:l:n:o:r:s:t:u:v:x:y: opt
+while getopts 4:6:b:c:d:e:f:hi:l:n:o:r:s:t:u:v:x: opt
 do
   case "$opt" in
     4) HOSTADDRESS=$OPTARG ;;
@@ -74,28 +74,29 @@ SUBJECT="[$NOTIFICATIONTYPE] $SERVICEDISPLAYNAME on $HOSTDISPLAYNAME is $SERVICE
 ## Build the notification message
 NOTIFICATION_MESSAGE=`cat << EOF
 *$SUBJECT*
+
 Icinga 2 Service Monitoring on $HOSTNAME
 -----------------------------------------------
 *==> $SERVICEDISPLAYNAME on $HOSTDISPLAYNAME is $SERVICESTATE! <==*
-Info:      $SERVICEOUTPUT
-When:       $LONGDATETIME
-Service:   $SERVICENAME (aka "$SERVICEDISPLAYNAME")
-Host:      $HOSTALIAS (aka "$HOSTDISPLAYNAME")
-IPv4: 	   $HOSTADDRESS
+*Info:*      $SERVICEOUTPUT
+*When:*       $LONGDATETIME
+*Service:*   $SERVICENAME (aka "$SERVICEDISPLAYNAME")
+*Host:*      $HOSTALIAS (aka "$HOSTDISPLAYNAME")
+*IPv4:* 	   $HOSTADDRESS
 EOF
 `
 
 ## Is this host IPv6 capable? Put its address into the message.
 if [ -n "$HOSTADDRESS6" ] ; then
   NOTIFICATION_MESSAGE="$NOTIFICATION_MESSAGE
-IPv6:    $HOSTADDRESS6"
+*IPv6:*    $HOSTADDRESS6"
 fi
 
 ## Are there any comments? Put them into the message.
 if [ -n "$NOTIFICATIONCOMMENT" ] ; then
   NOTIFICATION_MESSAGE="$NOTIFICATION_MESSAGE
 =============================================  
-Comment by $NOTIFICATIONAUTHORNAME:
+*Comment by $NOTIFICATIONAUTHORNAME:*
   $NOTIFICATIONCOMMENT"
 fi
 
@@ -103,7 +104,7 @@ fi
 if [ -n "$ICINGAWEB2URL" ] ; then
   NOTIFICATION_MESSAGE="$NOTIFICATION_MESSAGE
 ================  
-Get live status:
+*Get live status:*
   $ICINGAWEB2URL/monitoring/service/show?host=$HOSTALIAS&service=$SERVICENAME"
 fi
 
@@ -113,4 +114,4 @@ if [ "$VERBOSE" == "true" ] ; then
 fi
 
 
-/usr/bin/curl -X POST -H 'Content-type: application/json' --data "{'text':'$NOTIFICATION_MESSAGE'}" $APIURL
+/usr/bin/curl -X POST -H 'Content-type: application/json' --data "{'type': 'mrkdwn', 'text':'$NOTIFICATION_MESSAGE'}" $APIURL
