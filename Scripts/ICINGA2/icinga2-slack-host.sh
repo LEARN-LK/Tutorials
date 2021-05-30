@@ -69,33 +69,34 @@ SUBJECT="[$NOTIFICATIONTYPE] Host $HOSTDISPLAYNAME is $HOSTSTATE!"
 
 ## Build the notification message
 NOTIFICATION_MESSAGE=`cat << EOF
-<b>Subject:</b> **$SUBJECT**
-***** Icinga 2 Host Monitoring on $HOSTNAME *****
+*$SUBJECT*
+
+*Icinga 2 Host Monitoring on $HOSTNAME*
 ==> $HOSTDISPLAYNAME ($HOSTALIAS) is $HOSTSTATE! <==
-Info?    $HOSTOUTPUT
-When?    $LONGDATETIME
-Host?    $HOSTALIAS (aka "$HOSTDISPLAYNAME)
-IPv4?	 $HOSTADDRESS
+*Info:*    $HOSTOUTPUT
+*When:*    $LONGDATETIME
+*Host:*    $HOSTALIAS (aka "$HOSTDISPLAYNAME)
+*IPv4:*	 $HOSTADDRESS
 EOF
 `
 
 ## Is this host IPv6 capable? Put its address into the message.
 if [ -n "$HOSTADDRESS6" ] ; then
   NOTIFICATION_MESSAGE="$NOTIFICATION_MESSAGE
-IPv6?	 $HOSTADDRESS6"
+\n*IPv6:*	 $HOSTADDRESS6"
 fi
 
 ## Are there any comments? Put them into the message.
 if [ -n "$NOTIFICATIONCOMMENT" ] ; then
   NOTIFICATION_MESSAGE="$NOTIFICATION_MESSAGE
-Comment by $NOTIFICATIONAUTHORNAME:
+*Comment by $NOTIFICATIONAUTHORNAME:*
   $NOTIFICATIONCOMMENT"
 fi
 
 ## Are we using Icinga Web 2? Put the URL into the message.
 if [ -n "$ICINGAWEB2URL" ] ; then
   NOTIFICATION_MESSAGE="$NOTIFICATION_MESSAGE
-Get live status:
+*Get live status:*
   $ICINGAWEB2URL/monitoring/host/show?host=$HOSTALIAS"
 fi
 
@@ -105,4 +106,4 @@ if [ "$VERBOSE" == "true" ] ; then
 fi
 
 
-/usr/bin/curl -X POST -H 'Content-type: application/json' --data "{'text':'$NOTIFICATION_MESSAGE'}" $APIURL
+/usr/bin/curl -X POST -H 'Content-type: application/json' --data "{'type': 'mrkdwn', 'text':'$NOTIFICATION_MESSAGE'}" $APIURL
