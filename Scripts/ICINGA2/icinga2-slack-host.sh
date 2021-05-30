@@ -34,7 +34,7 @@ EOF
 exit 1;
 }
 
-while getopts 4:6::b:c:d:f:hi:l:n:o:s:t:v: opt
+while getopts 4:6::b:c:d:f:hi:l:n:o:s:t:v:x: opt
 do
   case "$opt" in
     4) HOSTADDRESS=$OPTARG ;;
